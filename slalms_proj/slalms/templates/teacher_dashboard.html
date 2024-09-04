@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <title>Teacher Dashboard</title>
+    <style>
+        body {
+            font-family: "Pacifico","Arial", "sans-serif";
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td input[type="text"] {
+            width: 180px; /* Enlarged width */
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        td button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+        td button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ teacher.full_name }}</h1>
+        <h2>Employee ID: {{ teacher.employee_id }}</h2>
+        <h2>Subject Taken: {{ teacher.subject_taken }}</h2>
+        <table>
+            <tr>
+                <th>Student Name</th>
+                <th>Registration Number</th>
+                <th>Marks</th>
+                <th>Learner Type</th>
+                <th>Action</th>
+            </tr>
+            {% for course in courses|dictsort:"learner_type" %}
+            <tr>
+                <td>{{ course.student.full_name }}</td>
+                <td>{{ course.student.registration_number }}</td>
+                <td>
+                    {% if course.marks %}
+                        {{ course.marks }}
+                    {% else %}
+                        <form action="{% url 'assign_marks' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="registration_number" value="{{ course.student.registration_number }}">
+                            <input type="text" name="marks" placeholder="Enter Marks">
+                </td>
+                <td>
+                    <button type="submit">Assign</button>
+                        </form>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ course.learner_type }}
+                </td>
+                <td>
+                    <form action="{% url 'assign_marks' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="registration_number" value="{{ course.student.registration_number }}">
+                        <input type="hidden" name="employee_id" value="{{ course.teacher.employee_id }}">
+                        <input type="text" name="marks" placeholder="Enter marks (Max 100)">
+                        <button type="submit">Assign</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="{% url 'home' %}">Go back to home</a>
+    </div>
+</body>
+</html>

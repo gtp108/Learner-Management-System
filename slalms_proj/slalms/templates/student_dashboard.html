@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            font-family: "Pacifico","Arial", "sans-serif";
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+        }
+        h1, h2, h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ student.full_name }}</h1>
+        <h2>Registration Number: {{ student.registration_number }}</h2>
+        <h2>Semester: {{ student.semester }}</h2>
+
+        <h3>Courses Taken:</h3>
+        <table>
+            <tr>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Learner Type</th>
+            </tr>
+            {% for course in student.course_set.all %}
+            <tr>
+                <td>{{ course.teacher.subject_taken }}</td>
+                <td>{{ course.marks }}</td>
+                <td>{{ course.learner_type }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="{% url 'home' %}">Go back to home</a>
+    </div>
+</body>
+</html>
